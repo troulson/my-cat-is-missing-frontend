@@ -12,7 +12,7 @@ function App() {
           <Header/>
           <Router>
             <Routes>
-              <Route path='/view' element={<ViewReport />} />
+              <Route path='/view/:id' element={<ViewReport />} />
               <Route path='/create' element={<CreateReport />} />
               <Route path='/' element={<Home />} />
             </Routes>

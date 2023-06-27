@@ -1,3 +1,4 @@
 export class Config {
-    static CREATE_API_URL: string = 'https://00xndv6797.execute-api.us-east-1.amazonaws.com/prod/create';
+    static CREATE_API_URL: string = 'https://kpqs889s2g.execute-api.us-east-1.amazonaws.com/prod/create';
+    static VIEW_API_URL: string = 'https://zy7glrw9yj.execute-api.us-east-1.amazonaws.com/prod/report';
 }

@@ -4,8 +4,21 @@ import Form from 'react-bootstrap/Form';
 import {Container} from "react-bootstrap";
 import {Config} from "../../config";
 import axios from "axios";
+import ErrorToast from "../../Components/ErrorToast/ErrorToast";
+import {useNavigate} from "react-router-dom";
 
 function CreatePage() {
+    const [error, setError] = useState<string | null>(null);
+
+    const handleAPIError = (message: string) => {
+        setError(message);
+
+        console.error(message);
+    };
+
+    const handleCloseToast = () => {
+        setError(null);
+    };
 
     const [catName, setCatName] = useState('');
     const [country, setCountry] = useState('');
@@ -17,6 +30,8 @@ function CreatePage() {
 
     const fileReader = new FileReader();
 
+    const navigate = useNavigate();
+
     // Post the form data to the API.
     const postFormData = (formData: any) => {
         axios.post(Config.CREATE_API_URL, formData, {
@@ -25,10 +40,12 @@ function CreatePage() {
             }
 
         }).then((response: any) => {
-            console.log(response)
+            console.log(response);
+
+            navigate('/view/' + response.data.reportId);
 
         }).catch((error: any) => {
-            console.error(error)
+            handleAPIError(error.response.data);
         });
     }
 
@@ -64,92 +81,99 @@ function CreatePage() {
                 postFormData(formData);
 
             }).catch(err => {
-                console.error(err);
+                handleAPIError(err.message);
             });
 
         } else {
-            postFormData(formData)
+            postFormData(formData);
         }
 
     };
 
     return (
-        <Container>
-            <Form onSubmit={event => handleSubmit(event)}>
-                <Form.Group className="mb-3" controlId="formCatName">
-                    <Form.Label>Cat name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Enter cat name"
-                        value={catName}
-                        onChange={(event) => setCatName(event.target.value)}
-                    />
-                </Form.Group>
+        <>
+            <Container>
+                <br/><br/>
+                <h2>Create Report</h2>
+                <hr/>
+                <Form onSubmit={event => handleSubmit(event)}>
+                    <Form.Group className="mb-3" controlId="formCatName">
+                        <Form.Label>Cat name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter cat name"
+                            value={catName}
+                            onChange={(event) => setCatName(event.target.value)}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formCountry">
-                    <Form.Label>Country</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Enter country"
-                        value={country}
-                        onChange={(event) => setCountry(event.target.value)}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formCountry">
+                        <Form.Label>Country</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter country"
+                            value={country}
+                            onChange={(event) => setCountry(event.target.value)}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formTown">
-                    <Form.Label>Town / City</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Enter name of town / city"
-                        value={town}
-                        onChange={(event) => setTown(event.target.value)}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formTown">
+                        <Form.Label>Town / City</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter name of town / city"
+                            value={town}
+                            onChange={(event) => setTown(event.target.value)}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formMissingSince">
-                    <Form.Label>Date missing since</Form.Label>
-                    <Form.Control
-                        type="date"
-                        value={missingSince}
-                        onChange={(event) => setMissingSince(event.target.value)}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formMissingSince">
+                        <Form.Label>Date missing since</Form.Label>
+                        <Form.Control
+                            type="date"
+                            value={missingSince}
+                            onChange={(event) => setMissingSince(event.target.value)}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formContent">
-                    <Form.Label>Additional information</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={5}
-                        value={content}
-                        onChange={(event) => setContent(event.target.value)}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formContent">
+                        <Form.Label>Additional information</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows={5}
+                            value={content}
+                            onChange={(event) => setContent(event.target.value)}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formTown">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Enter email address"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formTown">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter email address"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formImage">
-                    <Form.Label>Picture</Form.Label>
-                    <Form.Control
-                        type="file"
-                        accept="image/*"
-                        onChange={(event: any) => setImage(event.target.files[0] || null)}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3" controlId="formImage">
+                        <Form.Label>Picture</Form.Label>
+                        <Form.Control
+                            type="file"
+                            accept="image/*"
+                            onChange={(event: any) => setImage(event.target.files[0] || null)}
+                        />
+                    </Form.Group>
 
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        </Container>
-
+                    <Button variant="primary" type="submit">
+                        Submit
+                    </Button>
+                </Form>
+            </Container>
+            {error && (
+                <ErrorToast message={error} onClose={handleCloseToast} />
+            )}
+        </>
     );
 }
 
